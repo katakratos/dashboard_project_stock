@@ -3,7 +3,7 @@
 
 import { Category } from "@prisma/client";
 import prisma from "./lib/prisma";
-import { FormDataType, OrderItem, Product } from "./type";
+import { FormDataType, OrderItem, Product, Transaction } from "./type";
 
 export async function checkAndAddAssociation( email: string, name : string){
     if(!email) return
@@ -413,4 +413,50 @@ export async function deductStockWithTransaction( orderItems:OrderItem[], email:
         console.error(error)
         return {sucess: false, message: error }
     }
+}
+
+export async function getTransaction(email : string, limit? : number) : Promise< Transaction[]>{
+    try{
+        
+            if( !email  ){
+                throw new Error("L'email de l'association sont requis pour la lecture d'une catégorie")
+            }
+           
+            
+            const association = await getAssociation(email)
+            if(!association) {
+                    throw new Error("Aucune association trouvéé avec cet email");
+        }
+
+        const transactions = await prisma.transaction.findMany({
+            where: {
+                associationId: association.id
+            },
+            orderBy : {
+                createdAt: "desc"
+            },
+            take: limit,
+
+            include: {
+                product : {
+                    include : {
+                        category :  true
+                    }
+                }
+            }
+        })
+        
+        return transactions.map((tx) => ({
+            ...tx,
+            categoryName : tx.product.category.name,
+            productName : tx.product.name,
+            imageUrl : tx.product.imageUrl,
+            price : tx.product.price,
+            unit : tx.product.unit
+        }))
+    } catch (error){
+         console.error(error)
+         return []
+    }
+
 }
