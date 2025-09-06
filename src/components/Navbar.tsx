@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useState } from 'react'
-import {HandHeart, ListTree, Menu, PackagePlus, Receipt, ShoppingBasket, Warehouse, X} from 'lucide-react'
+import {HandHeart, LayoutDashboard, ListTree, Menu, PackagePlus, Receipt, ShoppingBasket, Warehouse, X} from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { UserButton, useUser } from '@clerk/nextjs'
@@ -13,6 +13,7 @@ const Navbar = () => {
     const pathname = usePathname()
     const [menuOpen, setMenuopen]   = useState (false)
     const navLinks = [
+        {href: "/" , label : "Tableau de bord" , icon : LayoutDashboard }, 
         {href: "/products" , label : "Produits" , icon : ShoppingBasket }, 
         {href: "/new-product" , label : "Nouveau produit" , icon : PackagePlus }, 
         {href: "/category" , label : "Categories" , icon : ListTree }, 
