@@ -97,7 +97,7 @@ const StockSummaryTable = ({email} :{email:string}) => {
             ) : (
                     <div>
                          <EmptyState
-                            message='Aucun produit disponible'
+                            message='Aucun produit critique'
                             IconComponent='PackageSearch'
                         />
                     </div>
